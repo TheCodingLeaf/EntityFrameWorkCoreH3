@@ -67,3 +67,20 @@ static void getTasts()
         }
     }
 }
+static void getincompletedTasksAndTodos()
+{
+    using (BloggingContext context = new())
+    {
+        var incompletedTasks = context.Tasks
+            .Where(task => task.Todo.Any(todo => !todo.IsCompleted))
+            .Include(task => task.Todo.Where(todo => !todo.IsCompleted));
+        foreach (var task in incompletedTasks)
+        {
+            Console.Write($"Task: {task.Name}");
+            foreach (var todo in task.Todo)
+            {
+                Console.Write($"- {todo.Name}");
+            }
+        }
+    }
+}
