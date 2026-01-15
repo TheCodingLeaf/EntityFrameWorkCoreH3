@@ -30,3 +30,24 @@ await db.SaveChangesAsync();
 Console.WriteLine("Delete the blog");
 db.Remove(blog);
 await db.SaveChangesAsync();
+
+static void seedTasks()
+{
+    using BloggingContext db = new BloggingContext();
+    if (!db.Tasks.Any())
+    {
+        var task = new EntityFrameWorkCoreH3.Task { Name = "Produce software" };
+        task.Todo.Add(new Todo { Name = "Write code", IsCompleted = false });
+        task.Todo.Add(new Todo { Name = "Compile source", IsCompleted = false });
+        task.Todo.Add(new Todo { Name = "Test program", IsCompleted = false });
+        db.Tasks.Add(task);
+        db.SaveChanges();
+
+        var task2 = new EntityFrameWorkCoreH3.Task { Name = "Brew coffee" };
+        task2.Todo.Add(new Todo { Name = "Pour water", IsCompleted = false });
+        task2.Todo.Add(new Todo { Name = "Pour coffee", IsCompleted = false });
+        task2.Todo.Add(new Todo { Name = "Turn on", IsCompleted = false });
+        db.Tasks.Add(task2);
+        db.SaveChanges();
+    }
+}
