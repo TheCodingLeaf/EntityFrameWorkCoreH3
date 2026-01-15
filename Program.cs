@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using EntityFrameWorkCoreH3;
+using System.Linq;
 
 using BloggingContext db = new BloggingContext();
 
@@ -49,5 +50,20 @@ static void seedTasks()
         task2.Todo.Add(new Todo { Name = "Turn on", IsCompleted = false });
         db.Tasks.Add(task2);
         db.SaveChanges();
+    }
+}
+static void getTasts()
+{
+    using (BloggingContext context = new())
+    {
+        var Tasks = context.Tasks.Include(task => task.Todo);
+        foreach (var task in Tasks)
+        {
+            Console.Write($"Task: {task.Name}");
+            foreach (var todo in task.Todo)
+            {
+                Console.Write($"- {todo.Name}");
+            }
+        }
     }
 }
