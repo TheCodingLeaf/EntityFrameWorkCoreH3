@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using EntityFrameWorkCoreH3;
 
-using var db = new BloggingContext();
+using BloggingContext db = new BloggingContext();
 
 // Note: This sample requires the database to be created before running.
 Console.WriteLine($"Database path: {db.DbPath}.");
