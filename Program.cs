@@ -6,6 +6,8 @@ using System.Linq;
 
 using BloggingContext db = new BloggingContext();
 
+seedTeamsAndWorkers();
+
 // Note: This sample requires the database to be created before running.
 Console.WriteLine($"Database path: {db.DbPath}.");
 
@@ -32,6 +34,7 @@ Console.WriteLine("Delete the blog");
 db.Remove(blog);
 await db.SaveChangesAsync();
 
+#region Tasks
 static void seedTasks()
 {
     using BloggingContext db = new BloggingContext();
@@ -82,5 +85,43 @@ static void getincompletedTasksAndTodos()
                 Console.Write($"- {todo.Name}");
             }
         }
+    }
+}
+#endregion
+
+static void seedTeamsAndWorkers()
+{
+    using BloggingContext db = new BloggingContext();
+    if (!db.Workers.Any())
+    {
+        var worker1 = new Worker { Name = "Steen Secher" };
+        var worker2 = new Worker { Name = "Ejvind Møller" };
+        var worker3 = new Worker { Name = "Konrad Sommer" };
+        var worker4 = new Worker { Name = "Sofus Lotus" };
+        var worker5 = new Worker { Name = "Remo Lademann" };
+        var worker6 = new Worker { Name = "Ella Fanth" };
+        var worker7 = new Worker { Name = "Anne Dam" };
+
+        var team1 = new Team { Name = "Frontend" };
+        var team2 = new Team { Name = "Backend" };
+        var team3 = new Team { Name = "Testere" };
+
+        team1.Workers.Add(worker1);
+        team1.Workers.Add(worker2);
+        team1.Workers.Add(worker2);
+        team1.Workers.Add(worker3);
+
+        team2.Workers.Add(worker4);
+        team2.Workers.Add(worker3);
+        team2.Workers.Add(worker5);
+
+        team3.Workers.Add(worker6);
+        team3.Workers.Add(worker7);
+        team3.Workers.Add(worker1);
+
+        db.Teams.Add(team1);
+        db.Teams.Add(team2);
+        db.Teams.Add(team3);
+        db.SaveChanges();
     }
 }

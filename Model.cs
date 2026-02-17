@@ -9,6 +9,17 @@ namespace EntityFrameWorkCoreH3
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Task> Tasks { get; set; }
+        public DbSet<Team> Teams { get; set; }
+        public DbSet<Worker> Workers { get; set; }
+        public DbSet<TeamWorker> TeamWorkers { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<TeamWorker>()
+                .HasKey(p => new { p.TeamId, p.WorkerId });
+        }
 
         public string DbPath { get; }
 
@@ -28,7 +39,7 @@ namespace EntityFrameWorkCoreH3
     public class Blog
     {
         public int BlogId { get; set; }
-        public string Url { get; set; }
+        public string Url { get; set; } = string.Empty;
 
         public List<Post> Posts { get; } = new();
     }
@@ -36,10 +47,10 @@ namespace EntityFrameWorkCoreH3
     public class Post
     {
         public int PostId { get; set; }
-        public string Title { get; set; }
-        public string Content { get; set; }
+        public string Title { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
 
         public int BlogId { get; set; }
-        public Blog Blog { get; set; }
+        public Blog Blog { get; set; } = null!;
     }
 }
