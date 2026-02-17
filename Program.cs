@@ -6,7 +6,7 @@ using System.Linq;
 
 using BloggingContext db = new BloggingContext();
 
-seedTeamsAndWorkers();
+
 
 // Note: This sample requires the database to be created before running.
 Console.WriteLine($"Database path: {db.DbPath}.");
@@ -123,5 +123,75 @@ static void seedTeamsAndWorkers()
         db.Teams.Add(team2);
         db.Teams.Add(team3);
         db.SaveChanges();
+    }
+}
+static void giveTeamsTasks()
+{
+    using BloggingContext db = new BloggingContext();
+
+    var teams = db.Teams
+        .Include(t => t.CurrentTask)
+        .ToList();
+
+    var tasksToAdd = new List<EntityFrameWorkCoreH3.Task>();
+
+    foreach (var team in teams)
+    {
+        if (team.CurrentTask != null)
+        {
+            // team already has a task; skip
+            continue;
+        }
+
+        EntityFrameWorkCoreH3.Task task;
+        switch (team.Name)
+        {
+            case "Frontend":
+                task = new EntityFrameWorkCoreH3.Task { Name = "Frontend: Implement responsive UI" };
+                task.Todo.Add(new Todo { Name = "Create wireframes", IsCompleted = false });
+                task.Todo.Add(new Todo { Name = "Implement components", IsCompleted = false });
+                task.Todo.Add(new Todo { Name = "Cross-browser testing", IsCompleted = false });
+                break;
+
+            case "Backend":
+                task = new EntityFrameWorkCoreH3.Task { Name = "Backend: Build API endpoints" };
+                task.Todo.Add(new Todo { Name = "Design API contracts", IsCompleted = false });
+                task.Todo.Add(new Todo { Name = "Implement controllers", IsCompleted = false });
+                task.Todo.Add(new Todo { Name = "Write integration tests", IsCompleted = false });
+                break;
+
+            case "Testere":
+            case "Test":
+            case "QA":
+                task = new EntityFrameWorkCoreH3.Task { Name = "QA: Create test plans and execute" };
+                task.Todo.Add(new Todo { Name = "Write test cases", IsCompleted = false });
+                task.Todo.Add(new Todo { Name = "Execute regression suite", IsCompleted = false });
+                task.Todo.Add(new Todo { Name = "Report defects", IsCompleted = false });
+                break;
+
+            default:
+                task = new EntityFrameWorkCoreH3.Task { Name = $"{team.Name}: General team task" };
+                task.Todo.Add(new Todo { Name = "Plan work", IsCompleted = false });
+                task.Todo.Add(new Todo { Name = "Execute tasks", IsCompleted = false });
+                break;
+        }
+
+        team.CurrentTask = task;
+        tasksToAdd.Add(task);
+    }
+
+    if (tasksToAdd.Any())
+    {
+        db.Tasks.AddRange(tasksToAdd);
+        db.SaveChanges();
+        Console.WriteLine("Assigned tasks to teams:");
+        foreach (var t in tasksToAdd)
+        {
+            Console.WriteLine($" - {t.Name}");
+        }
+    }
+    else
+    {
+        Console.WriteLine("All teams already have tasks assigned.");
     }
 }

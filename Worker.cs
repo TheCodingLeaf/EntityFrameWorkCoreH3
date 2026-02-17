@@ -10,6 +10,8 @@ namespace EntityFrameWorkCoreH3
     {
         public int WorkerId { get; set; }
         public string Name { get; set; } = string.Empty;
+        public int? CurrentTodoId { get; set; }
+        public Todo? CurrentTodo { get; set; } = null!;
         public List<Team> Teams { get; } = new();
     }
 }
